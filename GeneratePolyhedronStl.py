@@ -21,6 +21,11 @@ class Point:
                       self.y - other.y,
                       self.z - other.z)
 
+    def mult(self, factor):
+        return Point (self.x * factor,
+                      self.y * factor,
+                      self.z * factor)
+
     def __str__(self):
         return ("({}, {}, {})"
                 .format(self.x, self.y, self.z))
