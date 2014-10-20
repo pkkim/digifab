@@ -1,5 +1,9 @@
 import math
 
+phi = (1 + math.sqrt(5))/2
+iphi = 1/phi
+
+
 class Point:
     """A single vertex"""
     def __init__(self, x, y, z):
@@ -86,6 +90,7 @@ class PlatonicSolid:
     """A platonic solid, consisting of some triangles."""
     Tetrahedron, Cube, Octahedron, Dodecahedron, Icosahedron = range (5)
 
+    
     def generate(self, shape, scale):
         triangles = []
     
@@ -131,8 +136,6 @@ class PlatonicSolid:
                      [2, 1, 5],
                      [1, 0, 5]]
         elif shape == PlatonicSolid.Dodecahedron:
-            phi = (1 + math.sqrt(5))/2
-            iphi = 1/phi
             vertices = [Point(0, -iphi, phi),
                         Point(1, -1, 1),
                         Point(iphi, -phi, 0),
@@ -167,8 +170,38 @@ class PlatonicSolid:
                      [15, 16, 17, 18, 19]]
             name = "Dodecahedron"
         elif shape == PlatonicSolid.Icosahedron:
-            vertices = []
-            faces = []
+            vertices = [Point(-1, 0, -phi),
+                        Point(0, -phi, -1),
+                        Point(1, 0, -phi),
+                        Point(-phi, -1, 0),
+                        Point(phi, -1, 0),
+                        Point(0, phi, -1),
+                        Point(0, -phi, 1),
+                        Point(phi, 1, 0),
+                        Point(-phi, 1, 0),
+                        Point(-1, 0, phi),
+                        Point(1, 0, phi),
+                        Point(0, phi, 1)]
+            faces = [[0, 1, 2],
+                     [0, 3, 1],
+                     [1, 4, 2],
+                     [2, 5, 0],
+                     [5, 8, 0],
+                     [0, 8, 3],
+                     [3, 6, 1],
+                     [1, 6, 4],
+                     [4, 7, 2],
+                     [2, 7, 5],
+                     [6, 10, 4],
+                     [4, 10, 7],
+                     [7, 11, 5],
+                     [5, 11, 8],
+                     [8, 9, 3],
+                     [3, 9, 6],
+                     [6, 9, 10],
+                     [7, 10, 11],
+                     [8, 11, 9],
+                     [9, 11, 10]]
             name = "Icosahedron"
         else:
             raise ValueError("Shape must be a Tetrahedron, Cube, Octahedron,"
