@@ -131,14 +131,40 @@ class PlatonicSolid:
                      [2, 1, 5],
                      [1, 0, 5]]
         elif shape == PlatonicSolid.Dodecahedron:
-            vertices = [Point(-sqrt(3)/2, -0.5, 0),
-                        Point(sqrt(3)/2, -0.5, 0),
-                        Point(0, 1, 0),
-                        Point(0, 0, sqrt(2))]
-            faces = [[0, 2, 1],
-                     [0, 3, 2],
-                     [0, 1, 3],
-                     [1, 2, 3]]
+            phi = (1 + math.sqrt(5))/2
+            iphi = 1/phi
+            vertices = [Point(0, -iphi, phi),
+                        Point(1, -1, 1),
+                        Point(iphi, -phi, 0),
+                        Point(-iphi, -phi, 0),
+                        Point(-1, -1, 1),
+                        Point(0, iphi, phi),
+                        Point(phi, 0, iphi),
+                        Point(1, -1, -1),
+                        Point(-1, -1, -1),
+                        Point(-phi, 0, iphi),
+                        Point(1, 1, 1),
+                        Point(phi, 0, -iphi),
+                        Point(0, -iphi, -phi),
+                        Point(-phi, 0, -iphi),
+                        Point(-1, 1, 1),
+                        Point(iphi, phi, 0),
+                        Point(1, 1, -1),
+                        Point(0, iphi, -phi),
+                        Point(-1, 1, -1),
+                        Point(-iphi, phi, 0)]
+            faces = [[0, 4, 3, 2, 1],
+                     [0, 1, 6, 10, 5],
+                     [0, 5, 14, 9, 4],
+                     [4, 9, 13, 8, 3],
+                     [3, 8, 12, 7, 2],
+                     [2, 6, 11, 6, 1],
+                     [8, 13, 18, 17, 12],
+                     [7, 12, 17, 16, 11],
+                     [6, 11, 16, 15, 10],
+                     [5, 10, 15, 19, 14],
+                     [9, 14, 19, 18, 13],
+                     [15, 16, 17, 18, 19]]
             name = "Dodecahedron"
         elif shape == PlatonicSolid.Icosahedron:
             vertices = []
