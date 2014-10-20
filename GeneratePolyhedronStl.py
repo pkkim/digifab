@@ -125,8 +125,8 @@ class PlatonicSolid:
                         Point(-0.5, 0.5, 0),
                         Point(-0.5, -0.5, 0),
                         Point(0.5, -0.5, 0),
-                        Point(0, 0, sqrt(2)/2),
-                        Point(0, 0, -sqrt(2)/2)]
+                        Point(0, 0, math.sqrt(2)/2),
+                        Point(0, 0, -math.sqrt(2)/2)]
 	    faces = [[0, 1, 4],
                      [1, 2, 4],
                      [2, 3, 4],
@@ -135,6 +135,7 @@ class PlatonicSolid:
                      [3, 2, 5],
                      [2, 1, 5],
                      [1, 0, 5]]
+            name = "Octahedron"
         elif shape == PlatonicSolid.Dodecahedron:
             vertices = [Point(0, -iphi, phi),
                         Point(1, -1, 1),
