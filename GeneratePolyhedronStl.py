@@ -1,3 +1,5 @@
+import math
+
 class Point:
     """A single vertex"""
     def __init__(self, x, y, z):
@@ -25,6 +27,13 @@ class Triangle:
         self.p1 = p1
         self.p2 = p2
         self.p3 = p3
+
+    @staticmethod
+    def fromPointList(points):
+        print points
+        assert len(points) == 3
+        p1, p2, p3 = points
+        return Triangle(p1, p2, p3)
 
     def normal(self):
         """Returns non-unit normal vector to triangle, using technique at
@@ -60,11 +69,18 @@ class Triangle:
         print indices
         assert (len(indices) > 2)
         length = len(indices)
-        return [Triangle (vertices[indices[i]],
-                          vertices[indices[i+1]],
-                          vertices[indices[k]])
-                for i in range(length) for k in range(length)
-                if ((k == (i + 2)) or (i+2 == length and k == 0))]
+        if length == 3:
+            return [Triangle(vertices[indices[0]],
+                             vertices[indices[1]],
+                             vertices[indices[2]])]
+        if length > 3:
+            print range(length)[1:-1]
+            return [Triangle (vertices[indices[0]],
+                              vertices[indices[i]],
+                              vertices[indices[i+1]])
+                    for i in (range(length)[1:-1])]
+        else:
+            raise Error ("Need more than two indices.")
 
 class PlatonicSolid:
     """A platonic solid, consisting of some triangles."""
@@ -74,8 +90,14 @@ class PlatonicSolid:
         triangles = []
     
         if shape == PlatonicSolid.Tetrahedron:
-            vertices = []
-            faces = []
+            vertices = [Point(-math.sqrt(3)/2, -0.5, 0),
+                        Point(math.sqrt(3)/2, -0.5, 0),
+                        Point(0, 1, 0),
+                        Point(0, 0, math.sqrt(2))]
+            faces = [[0, 2, 1],
+                     [0, 3, 2],
+                     [0, 1, 3],
+                     [1, 2, 3]]
             name = "Tetrahedron"
         elif shape == PlatonicSolid.Cube:
             vertices = [Point(0.5, 0.5, 0),
@@ -109,8 +131,14 @@ class PlatonicSolid:
                      [2, 1, 5],
                      [1, 0, 5]]
         elif shape == PlatonicSolid.Dodecahedron:
-            vertices = []
-            faces = []
+            vertices = [Point(-sqrt(3)/2, -0.5, 0),
+                        Point(sqrt(3)/2, -0.5, 0),
+                        Point(0, 1, 0),
+                        Point(0, 0, sqrt(2))]
+            faces = [[0, 2, 1],
+                     [0, 3, 2],
+                     [0, 1, 3],
+                     [1, 2, 3]]
             name = "Dodecahedron"
         elif shape == PlatonicSolid.Icosahedron:
             vertices = []
@@ -121,6 +149,7 @@ class PlatonicSolid:
                              "Dodecahedron, or Icosahedron "
                              "(int values 0 through 4)")
 
+        
         for face in faces:
             print face
             triangles += Triangle.triangulate(vertices, face)
