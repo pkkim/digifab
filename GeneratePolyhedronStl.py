@@ -22,12 +22,20 @@ class Point:
                       self.z - other.z)
 
     def mult(self, factor):
-        return Point (self.x * factor,
-                      self.y * factor,
-                      self.z * factor)
+        factorFloat = float(factor)
+        return Point (self.x * factorFloat,
+                      self.y * factorFloat,
+                      self.z * factorFloat)
+
+    def norm(self):
+        return math.sqrt( self.x**2 + self.y**2 + self.z**2)
+
+    def stlStr(self):
+        return ("[{}, {}, {}]"
+                .format(self.x, self.y, self.z))
 
     def __str__(self):
-        return ("({}, {}, {})"
+        return ("[{}, {}, {}]"
                 .format(self.x, self.y, self.z))
                                      
 class Triangle:
@@ -92,32 +100,32 @@ class Triangle:
             raise Error ("Need more than two indices.")
 
 class PlatonicSolid:
-    """A platonic solid, consisting of some triangles."""
+    """A platonic solid."""
     Tetrahedron, Cube, Octahedron, Dodecahedron, Icosahedron = range (5)
 
-    
-    def generate(self, shape, scale):
-        triangles = []
-    
+    def generateData(self, shape, scale):
         if shape == PlatonicSolid.Tetrahedron:
-            vertices = [Point(-math.sqrt(3)/2, -0.5, 0),
+            unscaledVertices = [Point(-math.sqrt(3)/2.0, -0.5, 0),
                         Point(math.sqrt(3)/2, -0.5, 0),
-                        Point(0, 1, 0),
+                        Point(0, 1.0, 0),
                         Point(0, 0, math.sqrt(2))]
+            vertices = map(lambda p: p.mult(scale/math.sqrt(3)),
+                           unscaledVertices)
             faces = [[0, 2, 1],
                      [0, 3, 2],
                      [0, 1, 3],
                      [1, 2, 3]]
             name = "Tetrahedron"
         elif shape == PlatonicSolid.Cube:
-            vertices = [Point(0.5, 0.5, 0),
-                        Point(-0.5, 0.5, 0),
-                        Point(-0.5, -0.5, 0),
-                        Point(0.5, -0.5, 0),
-                        Point(0.5, 0.5, 1),
-                        Point(0.5, -0.5, 1),
-                        Point(-0.5, -0.5, 1),
-                        Point(-0.5, 0.5, 1)]
+            unscaledVertices = [Point(0.5, 0.5, 0),
+                                Point(-0.5, 0.5, 0),
+                                Point(-0.5, -0.5, 0),
+                                Point(0.5, -0.5, 0),
+                                Point(0.5, 0.5, 1),
+                                Point(0.5, -0.5, 1),
+                                Point(-0.5, -0.5, 1),
+                                Point(-0.5, 0.5, 1)]
+            vertices = map(lambda p: p.mult(scale), unscaledVertices)
             faces = [[0, 3, 2, 1],
                      [4, 7, 6, 5],
                      [0, 1, 7, 4],
@@ -126,13 +134,15 @@ class PlatonicSolid:
                      [3, 5, 6, 2]]
             name = "Cube"
         elif shape == PlatonicSolid.Octahedron:
-            vertices = [Point(0.5, 0.5, 0),
-                        Point(-0.5, 0.5, 0),
-                        Point(-0.5, -0.5, 0),
-                        Point(0.5, -0.5, 0),
-                        Point(0, 0, math.sqrt(2)/2),
-                        Point(0, 0, -math.sqrt(2)/2)]
-	    faces = [[0, 1, 4],
+            unscaledVertices = [Point(0.5, 0.5, 0),
+                                Point(-0.5, 0.5, 0),
+                                Point(-0.5, -0.5, 0),
+                                Point(0.5, -0.5, 0),
+                                Point(0, 0, math.sqrt(2)/2.0),
+                                Point(0, 0, -math.sqrt(2)/2.0)]
+            vertices = map(lambda p: p.mult(scale/math.sqrt(3)),
+                           unscaledVertices)
+            faces = [[0, 1, 4],
                      [1, 2, 4],
                      [2, 3, 4],
                      [3, 0, 4],
@@ -142,26 +152,28 @@ class PlatonicSolid:
                      [1, 0, 5]]
             name = "Octahedron"
         elif shape == PlatonicSolid.Dodecahedron:
-            vertices = [Point(0, -iphi, phi),
-                        Point(1, -1, 1),
+            unscaledVertices = [Point(0, -iphi, phi),
+                        Point(1.0, -1.0, 1.0),
                         Point(iphi, -phi, 0),
                         Point(-iphi, -phi, 0),
-                        Point(-1, -1, 1),
+                        Point(-1.0, -1.0, 1.0),
                         Point(0, iphi, phi),
                         Point(phi, 0, iphi),
-                        Point(1, -1, -1),
-                        Point(-1, -1, -1),
+                        Point(1.0, -1.0, -1.0),
+                        Point(-1.0, -1.0, -1.0),
                         Point(-phi, 0, iphi),
-                        Point(1, 1, 1),
+                        Point(1.0, 1.0, 1.0),
                         Point(phi, 0, -iphi),
                         Point(0, -iphi, -phi),
                         Point(-phi, 0, -iphi),
-                        Point(-1, 1, 1),
+                        Point(-1.0, 1.0, 1.0),
                         Point(iphi, phi, 0),
-                        Point(1, 1, -1),
+                        Point(1.0, 1.0, -1.0),
                         Point(0, iphi, -phi),
-                        Point(-1, 1, -1),
+                        Point(-1.0, 1.0, -1.0),
                         Point(-iphi, phi, 0)]
+            vertices = map(lambda p: p.mult(scale/(2/phi)),
+                           unscaledVertices)
             faces = [[0, 4, 3, 2, 1],
                      [0, 1, 6, 10, 5],
                      [0, 5, 14, 9, 4],
@@ -176,18 +188,20 @@ class PlatonicSolid:
                      [15, 16, 17, 18, 19]]
             name = "Dodecahedron"
         elif shape == PlatonicSolid.Icosahedron:
-            vertices = [Point(-1, 0, -phi),
-                        Point(0, -phi, -1),
-                        Point(1, 0, -phi),
-                        Point(-phi, -1, 0),
-                        Point(phi, -1, 0),
-                        Point(0, phi, -1),
-                        Point(0, -phi, 1),
-                        Point(phi, 1, 0),
-                        Point(-phi, 1, 0),
-                        Point(-1, 0, phi),
-                        Point(1, 0, phi),
-                        Point(0, phi, 1)]
+            unscaledVertices = [Point(-1.0, 0, -phi),
+                        Point(0, -phi, -1.0),
+                        Point(1.0, 0, -phi),
+                        Point(-phi, -1.0, 0),
+                        Point(phi, -1.0, 0),
+                        Point(0, phi, -1.0),
+                        Point(0, -phi, 1.0),
+                        Point(phi, 1.0, 0),
+                        Point(-phi, 1.0, 0),
+                        Point(-1.0, 0, phi),
+                        Point(1.0, 0, phi),
+                        Point(0, phi, 1.0)]
+            vertices = map(lambda p: p.mult(scale/2),
+                           unscaledVertices)
             faces = [[0, 1, 2],
                      [0, 3, 1],
                      [1, 4, 2],
@@ -213,10 +227,36 @@ class PlatonicSolid:
             raise ValueError("Shape must be a Tetrahedron, Cube, Octahedron,"
                              "Dodecahedron, or Icosahedron "
                              "(int values 0 through 4)")
-
         
+        return (vertices, faces, name)
+
+    def generateScad(self, shape, scale):
+        vertices, faces, name = self.generateData(shape, scale)
+
+        output = ("module {} () {{\n"
+                  "polyhedron (\n"
+                  "points = [\n").format(name)
+        
+        for vertex in vertices:
+            output += Point.stlStr(vertex) + ",\n"
+
+        output += ("],\n"
+                   "faces = [\n")
+
         for face in faces:
-            print face
+            output += str(face) + ",\n"
+
+        output += ("]);\n"
+                   "}}\n"
+                   "\n"
+                   "{} ();".format(name))
+        return output
+    
+    def generateStl(self, shape, scale):
+        vertices, faces, name = self.generateData(shape, scale)
+
+        triangles = []
+        for face in faces:
             triangles += Triangle.triangulate(vertices, face)
 
         output = "solid {}\n".format(name)
